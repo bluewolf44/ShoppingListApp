@@ -16,6 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.layout.ContentScale
 
 class MainActivity : ComponentActivity() {
@@ -25,7 +30,7 @@ class MainActivity : ComponentActivity() {
             ShoppingListTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    ImageTest()
+                    ButtonTest()
                 }
             }
         }
@@ -48,15 +53,30 @@ fun ImageTest()
 {
     val image = painterResource(id = R.drawable.blue)
     Box{
-        Image(painter = image, contentDescription = null, modifier = Modifier.fillMaxSize().fillMaxWidth(), contentScale = ContentScale.Crop)
+        Image(painter = image, contentDescription = null, modifier = Modifier
+            .fillMaxSize()
+            .fillMaxWidth(), contentScale = ContentScale.Crop)
         ColumnTest("DEs","Daniel","God")
     }
 }
+@Composable
+fun ButtonTest()
+{
+    var numb by remember {
+        mutableStateOf(1)
+    }
+
+    Button(onClick = { numb++ }) {
+        Text(text = "$numb")
+        
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     ShoppingListTheme {
-        ImageTest()
+        ButtonTest()
     }
 }
