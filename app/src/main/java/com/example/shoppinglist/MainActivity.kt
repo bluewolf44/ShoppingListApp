@@ -65,6 +65,8 @@ fun ButtonTest()
         Text(text = "Total amount:$amount")
     }
 }
+
+
 private fun calculateTip(n:Double,tip:Double=15.0):String{
     val amount:Double = n*tip/100f + n
     return "$amount"
