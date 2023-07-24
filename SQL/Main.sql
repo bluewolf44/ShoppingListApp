@@ -22,6 +22,8 @@ Create Table Person
 Create Table List
 (
     ListID Numeric(10,0) not null,
+    ListName varchar(255) not null,
+    ListDescription varchar(255) DEFAULT '' not null,
     ListText text DEFAULT '' not null,
     lastUpdated timestamp DEFAULT CURRENT_TIMESTAMP not null,
     DateCreated timestamp DEFAULT CURRENT_TIMESTAMP not null,

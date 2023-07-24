@@ -1,10 +1,13 @@
 package com.shoppinglist.routing
 
+import com.shoppinglist.model.Person
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.postgresql.ds.PGSimpleDataSource
 import java.sql.Connection
 import java.sql.DriverManager
@@ -13,6 +16,11 @@ import java.sql.PreparedStatement
 
 fun Route.PersonRouting()
 {
+    val dbConnection: Connection = DriverManager.getConnection(
+        "jdbc:postgresql://localhost:5432/postgres",
+        "postgres", "XCGT8Fdj"
+    )
+
     route("/person") {
         get("{username}/{password}"){
             val username = call.parameters["username"] ?: return@get call.respondText(
@@ -24,13 +32,8 @@ fun Route.PersonRouting()
                 status = HttpStatusCode.BadRequest
             )
 
-            val dbConnection: Connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/postgres",
-                "postgres", "XCGT8Fdj"
-            )
-
             val statement: PreparedStatement = dbConnection.prepareStatement(
-                "Select * from Person where UserName =? and Password=?").apply {
+                "Select * from Person INNER JOIN Access on Person.PersonID = Access.PersonID where username=? and password =?").apply {
                 setString(1,  username)
                 setString(2, password)
             }
@@ -38,7 +41,7 @@ fun Route.PersonRouting()
             val resultSet = statement.executeQuery()
             val userNames = mutableListOf<String>()
             while (resultSet.next()) {
-                userNames += resultSet.getString("FirstName")
+                userNames += resultSet.getString("ListID")
             }
             if(userNames.isEmpty()){
                 call.respondText(
@@ -46,8 +49,25 @@ fun Route.PersonRouting()
                     status = HttpStatusCode.NotFound
                 )
             }
-
             call.respond(userNames)
+        }
+        post {
+            val person = call.receive<Person>()
+            val statement: PreparedStatement = dbConnection.prepareStatement(
+                "INSERT INTO Person (PersonID,FirstName,LastName,UserName,Password,Email)" +
+                    "Values (?,?,?,?,?,?)").apply {
+                setInt(1, person.personID)
+                setString(2, person.firstName)
+                setString(3, person.lastName)
+                setString(4, person.userName)
+                setString(5, person.password)
+                setString(6, person.email)
+
+            }
+            statement.executeUpdate()
+
+            call.respondText("Person stored correctly", status = HttpStatusCode.Created)
+
         }
     }
 }
