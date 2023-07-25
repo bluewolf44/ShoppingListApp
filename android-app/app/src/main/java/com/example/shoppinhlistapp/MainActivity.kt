@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.shoppinhlistapp.ui.pages.LoginPage
 import com.example.shoppinhlistapp.ui.pages.TextPage
 import com.example.shoppinhlistapp.ui.theme.ShoppinhlistappTheme
 
@@ -46,7 +47,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TextPage()
+                    //TextPage()
+                    LoginPage()
                 }
             }
         }
