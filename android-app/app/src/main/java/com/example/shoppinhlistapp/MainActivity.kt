@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.shoppinhlistapp.ui.pages.AccessPage
 import com.example.shoppinhlistapp.ui.pages.LoginPage
 import com.example.shoppinhlistapp.ui.pages.TextPage
 import com.example.shoppinhlistapp.ui.pages.listPage
@@ -54,7 +55,8 @@ class MainActivity : ComponentActivity() {
                     //LoginPage()
                     //signUpPage()
                     //listPage()
-                    newListPage()
+                    //newListPage()
+                    AccessPage()
                 }
             }
         }
