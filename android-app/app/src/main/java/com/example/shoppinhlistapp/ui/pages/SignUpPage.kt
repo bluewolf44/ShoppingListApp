@@ -1,6 +1,8 @@
 package com.example.shoppinhlistapp.ui.pages
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -45,10 +47,22 @@ fun signUpPage()
         EditSignField("enter firstname",firstname){ firstname = it }
         EditSignField("enter lastname",lastname){ lastname = it }
         EditSignField("enter email",email){ email = it }
-        Button(onClick = { /*TODO*/ },
-            modifier = Modifier
-            .padding(5.dp),) {
-            Text(text = "Sign up")
+        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth())
+        {
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .padding(5.dp),
+            ) {
+                Text(text = "signup")
+            }
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .padding(5.dp),
+            ) {
+                Text(text = "cancel")
+            }
         }
         Text(text = "UserName alreay taken")
     }

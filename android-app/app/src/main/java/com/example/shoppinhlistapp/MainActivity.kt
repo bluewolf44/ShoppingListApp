@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.example.shoppinhlistapp.ui.pages.LoginPage
 import com.example.shoppinhlistapp.ui.pages.TextPage
 import com.example.shoppinhlistapp.ui.pages.listPage
+import com.example.shoppinhlistapp.ui.pages.newListPage
 import com.example.shoppinhlistapp.ui.pages.signUpPage
 import com.example.shoppinhlistapp.ui.theme.ShoppinhlistappTheme
 
@@ -52,7 +53,8 @@ class MainActivity : ComponentActivity() {
                     //TextPage()
                     //LoginPage()
                     //signUpPage()
-                    listPage()
+                    //listPage()
+                    newListPage()
                 }
             }
         }
