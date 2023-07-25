@@ -3,6 +3,7 @@ package com.shoppinglist.routing
 import com.shoppinglist.model.ListClass
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.sql.Connection
@@ -53,6 +54,67 @@ fun Route.ListRounting()
             call.respond(lists)
 
         }
-    }
+        get("{username}/{password}/{listId}") {
+            val username = call.parameters["username"] ?: return@get call.respondText(
+                "Missing username",
+                status = HttpStatusCode.BadRequest
+            )
+            val password = call.parameters["password"] ?: return@get call.respondText(
+                "Missing password",
+                status = HttpStatusCode.BadRequest
+            )
+            val listId = call.parameters["listId"] ?: return@get call.respondText(
+                "Missing listId",
+                status = HttpStatusCode.BadRequest
+            )
 
+            val statement: PreparedStatement = dbConnection.prepareStatement(
+                "Select ListText from Person " +
+                        "INNER JOIN Access on Person.PersonID = Access.PersonID " +
+                        "INNER JOIN List on Access.ListID = List.ListID " +
+                        "where username=? and password =? and list.listid =?"
+            ).apply {
+                setString(1, username)
+                setString(2, password)
+                setInt(3, listId.toInt())
+            }
+
+            val resultSet = statement.executeQuery()
+            resultSet.next()
+
+            call.respondText(resultSet.getString("ListText"))
+        }
+        patch ("{username}/{password}/{listId}") {
+            val username = call.parameters["username"] ?: return@patch call.respondText(
+                "Missing username",
+                status = HttpStatusCode.BadRequest
+            )
+            val password = call.parameters["password"] ?: return@patch call.respondText(
+                "Missing password",
+                status = HttpStatusCode.BadRequest
+            )
+            val listId = call.parameters["listId"] ?: return@patch call.respondText(
+                "Missing listId",
+                status = HttpStatusCode.BadRequest
+            )
+
+            val statement: PreparedStatement = dbConnection.prepareStatement(
+                "UPDATE List SET listtext =? " +
+                        "where listid in (" +
+                        "Select list.listid from Person " +
+                        "INNER JOIN Access on Person.PersonID = Access.PersonID " +
+                        "INNER JOIN List on Access.ListID = List.ListID " +
+                        "where username=? and password =? and list.listid = ?)"
+            ).apply {
+                setString(1,call.receive<String>())
+                setString(2, username)
+                setString(3, password)
+                setInt(4, listId.toInt())
+            }
+            statement.executeUpdate()
+
+            call.respondText("Text updated correctly", status = HttpStatusCode.Created)
+        }
+
+    }
 }

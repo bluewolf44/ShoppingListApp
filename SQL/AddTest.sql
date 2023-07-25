@@ -11,7 +11,16 @@
 --values (0000000000,0000000000,'bas');
 
 
-Select List.ListID,accesstype,listname,listdescription,lastupdated,datecreated from Person
+Select * from Person
 INNER JOIN Access on Person.PersonID = Access.PersonID
 INNER JOIN List on Access.ListID = List.ListID
 where username='Blue' and password ='Fire1234';
+
+UPDATE List
+SET listtext = 'pie'
+where listid in (
+    Select list.listid from Person
+    INNER JOIN Access on Person.PersonID = Access.PersonID
+    INNER JOIN List on Access.ListID = List.ListID
+    where username='Blue' and password ='Fire1234' and list.listid = 0
+);
