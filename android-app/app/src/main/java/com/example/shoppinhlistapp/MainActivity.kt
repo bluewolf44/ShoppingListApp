@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shoppinhlistapp.ui.pages.LoginPage
 import com.example.shoppinhlistapp.ui.pages.TextPage
+import com.example.shoppinhlistapp.ui.pages.signUpPage
 import com.example.shoppinhlistapp.ui.theme.ShoppinhlistappTheme
 
 class MainActivity : ComponentActivity() {
@@ -48,7 +49,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //TextPage()
-                    LoginPage()
+                    //LoginPage()
+                    signUpPage()
                 }
             }
         }

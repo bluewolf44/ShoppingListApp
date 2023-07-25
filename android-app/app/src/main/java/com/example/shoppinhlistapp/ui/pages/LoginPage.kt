@@ -3,7 +3,6 @@ package com.example.shoppinhlistapp.ui.pages
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -35,7 +34,7 @@ fun LoginPage(modifier: Modifier = Modifier) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Welcome to Daniels Shopping app",modifier.padding(20.dp))
         EditUserField("Enter UserName", username) { username = it }
-        EditPasswordField("Enter password", username) { password = it }
+        EditPasswordField("Enter password", password) { password = it }
         Row(horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth())
         {
             Button(
