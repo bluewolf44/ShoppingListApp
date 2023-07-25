@@ -35,9 +35,9 @@ fun Route.ListRounting()
 
             val statement: PreparedStatement = dbConnection.prepareStatement(
                 "Select list.listid,accesstype,listname,listdescription,lastupdated,datecreated from Person " +
-                        "INNER JOIN Access on Person.PersonID = Access.PersonID " +
+                        "INNER JOIN Access on Person.UserName = Access.UserName " +
                         "INNER JOIN List on Access.ListID = List.ListID " +
-                        "where username=? and password =?").apply {
+                        "where person.username=? and password =?").apply {
                 setString(1,  username)
                 setString(2, password)
             }
@@ -74,9 +74,9 @@ fun Route.ListRounting()
 
             val statement: PreparedStatement = dbConnection.prepareStatement(
                 "Select ListText from Person " +
-                        "INNER JOIN Access on Person.PersonID = Access.PersonID " +
+                        "INNER JOIN Access on Person.UserName = Access.UserName " +
                         "INNER JOIN List on Access.ListID = List.ListID " +
-                        "where username=? and password =? and list.listid =?"
+                        "where person.username=? and password =? and list.listid =?"
             ).apply {
                 setString(1, username)
                 setString(2, password)
@@ -106,9 +106,9 @@ fun Route.ListRounting()
                 "UPDATE List SET listtext =? " +
                         "where listid in (" +
                         "Select list.listid from Person " +
-                        "INNER JOIN Access on Person.PersonID = Access.PersonID " +
+                        "INNER JOIN Access on Person.UserName = Access.UserName " +
                         "INNER JOIN List on Access.ListID = List.ListID " +
-                        "where username=? and password =? and list.listid = ?)"
+                        "where person.username=? and password =? and list.listid = ?)"
             ).apply {
                 setString(1,call.receive<String>())
                 setString(2, username)
@@ -142,8 +142,8 @@ fun Route.ListRounting()
             statement.executeUpdate()
 
             val statement2: PreparedStatement = dbConnection.prepareStatement(
-                "Insert into Access (PersonID,ListID,AccessType) " +
-                        "values ((Select PersonID from Person where username=? and password =?),?,'own')").apply {
+                "Insert into Access (UserName,ListID,AccessType) " +
+                        "values ((Select UserName from Person where person.username=? and password =?),?,'own')").apply {
                 setString(1, username)
                 setString(2, password)
                 setInt(3, listSize++)
@@ -152,6 +152,51 @@ fun Route.ListRounting()
 
             call.respondText("List stored correctly", status = HttpStatusCode.Created)
         }
+        post("{username}/{password}/{otherUsername}/{listId}") {
+            val username = call.parameters["username"] ?: return@post call.respondText(
+                "Missing username",
+                status = HttpStatusCode.BadRequest
+            )
+            val password = call.parameters["password"] ?: return@post call.respondText(
+                "Missing password",
+                status = HttpStatusCode.BadRequest
+            )
+            val otherUsername = call.parameters["otherUsername"] ?: return@post call.respondText(
+                "Missing otherUsername",
+                status = HttpStatusCode.BadRequest
+            )
+            val listId = call.parameters["listId"] ?: return@post call.respondText(
+                "Missing listId",
+                status = HttpStatusCode.BadRequest
+            )
+            val statement: PreparedStatement = dbConnection.prepareStatement(
+                "Select * from Person " +
+                        "INNER JOIN Access on Person.UserName = Access.UserName " +
+                        "INNER JOIN List on Access.ListID = List.ListID " +
+                        "where person.username=? and password =? and list.listid =?"
+            ).apply {
+                setString(1, username)
+                setString(2, password)
+                setInt(3, listId.toInt())
+            }
+            val resultSet = statement.executeQuery()
+            if(!resultSet.next())
+            {
+                call.respondText(
+                    "Error someWhere",
+                    status = HttpStatusCode.NotFound
+                )
+            }
 
+            val statement2: PreparedStatement = dbConnection.prepareStatement(
+                "Insert into Access (UserName,ListID,AccessType) " +
+                        "values (?,?,'vie')").apply {
+                setString(1, otherUsername)
+                setInt(2, listId.toInt())
+            }
+            statement2.executeUpdate()
+
+            call.respondText("ListAccess stored correctly", status = HttpStatusCode.Created)
+        }
     }
 }

@@ -34,8 +34,8 @@ fun Route.PersonRouting()
             )
 
             val statement: PreparedStatement = dbConnection.prepareStatement(
-                "Select * from Person INNER JOIN Access on Person.PersonID = Access.PersonID where username=? and password =?").apply {
-                setString(1,  username)
+                "Select * from Person INNER JOIN Access on Person.UserName = Access.UserName where person.username=? and password =?").apply {
+                setString(1, username)
                 setString(2, password)
             }
 
@@ -55,14 +55,13 @@ fun Route.PersonRouting()
         post {
             val person = call.receive<Person>()
             val statement: PreparedStatement = dbConnection.prepareStatement(
-                "INSERT INTO Person (PersonID,FirstName,LastName,UserName,Password,Email)" +
-                    "Values (?,?,?,?,?,?)").apply {
-                setInt(1, personSize++)
-                setString(2, person.firstName)
-                setString(3, person.lastName)
-                setString(4, person.userName)
-                setString(5, person.password)
-                setString(6, person.email)
+                "INSERT INTO Person (FirstName,LastName,UserName,Password,Email)" +
+                    "Values (?,?,?,?,?)").apply {
+                setString(1, person.firstName)
+                setString(2, person.lastName)
+                setString(3, person.userName)
+                setString(4, person.password)
+                setString(5, person.email)
             }
             statement.executeUpdate()
             call.respondText("Person stored correctly", status = HttpStatusCode.Created)

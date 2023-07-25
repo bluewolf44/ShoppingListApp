@@ -7,7 +7,6 @@ drop table Person;
 
 Create Table Person
 (
-    PersonID Numeric(10,0) not null,
     FirstName varchar(255) not null,
     LastName varchar(255) not null,
     
@@ -16,7 +15,7 @@ Create Table Person
     Email varchar(255) not null,
     IsVerified Boolean DEFAULT false not null,
 
-    CONSTRAINT PK_Person PRIMARY KEY (PersonID)
+    CONSTRAINT PK_Person PRIMARY KEY (UserName)
 );
 
 Create Table List
@@ -39,11 +38,11 @@ Create Table TypeOfAccess
 
 Create Table Access
 (
-    PersonID Numeric(10,0) not null,
+    UserName varchar(255) not null,
     ListID Numeric(10,0) not null,
     AccessType varchar(3) not null,
 
-    CONSTRAINT FK_PersonOrder FOREIGN KEY (PersonID) REFERENCES Person(PersonID),
+    CONSTRAINT FK_PersonOrder FOREIGN KEY (UserName) REFERENCES Person(UserName),
     CONSTRAINT FK_LsitOrder FOREIGN KEY (ListID) REFERENCES List(ListID),
     CONSTRAINT FK_Type FOREIGN KEY (AccessType) REFERENCES TypeOfAccess(AccessType)
 );
