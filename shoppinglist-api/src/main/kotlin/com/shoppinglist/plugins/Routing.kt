@@ -1,5 +1,6 @@
 package com.shoppinglist.plugins
 
+import com.shoppinglist.routing.ListRounting
 import com.shoppinglist.routing.PersonRouting
 import io.ktor.server.routing.*
 import io.ktor.server.response.*
@@ -17,5 +18,6 @@ fun Application.configureRouting() {
     }
     routing {
         PersonRouting()
+        ListRounting()
     }
 }

@@ -62,12 +62,10 @@ fun Route.PersonRouting()
                 setString(4, person.userName)
                 setString(5, person.password)
                 setString(6, person.email)
-
             }
             statement.executeUpdate()
 
             call.respondText("Person stored correctly", status = HttpStatusCode.Created)
-
         }
     }
 }

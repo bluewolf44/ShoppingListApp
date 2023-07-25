@@ -11,6 +11,7 @@
 --values (0000000000,0000000000,'bas');
 
 
-Select * from Person;
---INNER JOIN Access on Person.PersonID = Access.PersonID
---where username='Blue' and password ='Fire1234';
+Select List.ListID,accesstype,listname,listdescription,lastupdated,datecreated from Person
+INNER JOIN Access on Person.PersonID = Access.PersonID
+INNER JOIN List on Access.ListID = List.ListID
+where username='Blue' and password ='Fire1234';
