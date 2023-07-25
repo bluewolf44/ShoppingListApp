@@ -1,5 +1,6 @@
 package com.shoppinglist.routing
 
+import com.shoppinglist.dao.personSize
 import com.shoppinglist.model.Person
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -56,7 +57,7 @@ fun Route.PersonRouting()
             val statement: PreparedStatement = dbConnection.prepareStatement(
                 "INSERT INTO Person (PersonID,FirstName,LastName,UserName,Password,Email)" +
                     "Values (?,?,?,?,?,?)").apply {
-                setInt(1, person.personID)
+                setInt(1, personSize++)
                 setString(2, person.firstName)
                 setString(3, person.lastName)
                 setString(4, person.userName)
@@ -64,7 +65,6 @@ fun Route.PersonRouting()
                 setString(6, person.email)
             }
             statement.executeUpdate()
-
             call.respondText("Person stored correctly", status = HttpStatusCode.Created)
         }
     }

@@ -1,6 +1,9 @@
 package com.shoppinglist.routing
 
+import com.shoppinglist.dao.listSize
 import com.shoppinglist.model.ListClass
+import com.shoppinglist.model.ListCreate
+import com.shoppinglist.model.Person
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -16,6 +19,7 @@ fun Route.ListRounting()
         "jdbc:postgresql://localhost:5432/postgres",
         "postgres", "XCGT8Fdj"
     )
+    //var listSize = 1
 
     route("/List")
     {
@@ -114,6 +118,39 @@ fun Route.ListRounting()
             statement.executeUpdate()
 
             call.respondText("Text updated correctly", status = HttpStatusCode.Created)
+        }
+        post("{username}/{password}") {
+            val username = call.parameters["username"] ?: return@post call.respondText(
+                "Missing username",
+                status = HttpStatusCode.BadRequest
+            )
+            val password = call.parameters["password"] ?: return@post call.respondText(
+                "Missing password",
+                status = HttpStatusCode.BadRequest
+            )
+
+
+            val list = call.receive<ListCreate>()
+
+            val statement: PreparedStatement = dbConnection.prepareStatement(
+                "Insert into list (ListID,ListName,ListDescription) " +
+                        "values (?,?,?)").apply {
+                setInt(1, listSize)
+                setString(2, list.listName)
+                setString(3, list.listDescription)
+            }
+            statement.executeUpdate()
+
+            val statement2: PreparedStatement = dbConnection.prepareStatement(
+                "Insert into Access (PersonID,ListID,AccessType) " +
+                        "values ((Select PersonID from Person where username=? and password =?),?,'own')").apply {
+                setString(1, username)
+                setString(2, password)
+                setInt(3, listSize++)
+            }
+            statement2.executeUpdate()
+
+            call.respondText("List stored correctly", status = HttpStatusCode.Created)
         }
 
     }
