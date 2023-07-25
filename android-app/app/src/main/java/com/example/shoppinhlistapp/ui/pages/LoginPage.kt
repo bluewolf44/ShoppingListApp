@@ -21,9 +21,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.shoppinhlistapp.ui.Screen
 
 @Composable
-fun LoginPage(modifier: Modifier = Modifier) {
+fun LoginPage(navController: NavHostController) {
     var password by remember {
         mutableStateOf("")
     }
@@ -32,13 +34,13 @@ fun LoginPage(modifier: Modifier = Modifier) {
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Welcome to Daniels Shopping app",modifier.padding(20.dp))
+        Text(text = "Welcome to Daniels Shopping app",Modifier.padding(20.dp))
         EditUserField("Enter UserName", username) { username = it }
         EditPasswordField("Enter password", password) { password = it }
         Row(horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth())
         {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { },
                 modifier = Modifier
                     .padding(5.dp),
             ) {
@@ -46,7 +48,7 @@ fun LoginPage(modifier: Modifier = Modifier) {
             }
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate(route = Screen.SignUp.route)},
                 modifier = Modifier
                     .padding(5.dp),
             ) {

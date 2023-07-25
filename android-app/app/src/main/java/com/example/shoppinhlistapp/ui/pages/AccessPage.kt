@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AccessPage(){
+
     var name by remember {
         mutableStateOf("")
     }
