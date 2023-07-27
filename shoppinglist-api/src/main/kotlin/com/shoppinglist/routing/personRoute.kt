@@ -40,17 +40,23 @@ fun Route.PersonRouting()
             }
 
             val resultSet = statement.executeQuery()
-            val userNames = mutableListOf<String>()
-            while (resultSet.next()) {
-                userNames += resultSet.getString("ListID")
-            }
-            if(userNames.isEmpty()){
+            if(!resultSet.next())
+            {
                 call.respondText(
                     "No customer with username $username",
                     status = HttpStatusCode.NotFound
                 )
             }
-            call.respond(userNames)
+            else {
+                val person = Person(
+                    firstName = resultSet.getString("FirstName"),
+                    lastName = resultSet.getString("LastName"),
+                    email = resultSet.getString("Email"),
+                    userName = resultSet.getString("UserName"),
+                    password = resultSet.getString("Password"),
+                )
+                call.respond(person)
+            }
         }
         post {
             val person = call.receive<Person>()

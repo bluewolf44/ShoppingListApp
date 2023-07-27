@@ -20,9 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.shoppinhlistapp.ui.Screen
 
 @Composable
-fun signUpPage()
+fun signUpPage(navController: NavHostController)
 {
     var username by remember {
         mutableStateOf("")
@@ -54,14 +56,14 @@ fun signUpPage()
                 modifier = Modifier
                     .padding(5.dp),
             ) {
-                Text(text = "signup")
+                Text(text = "Sign up")
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.popBackStack() },
                 modifier = Modifier
                     .padding(5.dp),
             ) {
-                Text(text = "cancel")
+                Text(text = "Cancel")
             }
         }
         Text(text = "UserName alreay taken")

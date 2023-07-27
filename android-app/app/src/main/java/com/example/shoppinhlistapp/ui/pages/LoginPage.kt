@@ -3,6 +3,7 @@ package com.example.shoppinhlistapp.ui.pages
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -21,17 +22,42 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.shoppinhlistapp.ui.Screen
+import com.example.shoppinhlistapp.ui.viewmodel.LoginInViewModel
+import com.example.shoppinhlistapp.ui.viewmodel.MarsUiState
 
 @Composable
 fun LoginPage(navController: NavHostController) {
-    var password by remember {
-        mutableStateOf("")
-    }
+
     var username by remember {
         mutableStateOf("")
     }
+
+    var password by remember {
+        mutableStateOf("")
+    }
+
+    var errorText by remember {
+        mutableStateOf("")
+    }
+
+    val shoppingViewModel: LoginInViewModel = viewModel()
+
+    when (shoppingViewModel.marsUiState) {
+        is MarsUiState.Loading -> {}
+        is MarsUiState.Success -> {
+            navController.navigate(route = Screen.ListScreen.route)
+            shoppingViewModel.marsUiState = MarsUiState.Loading
+        }
+
+        is MarsUiState.Error -> {
+            errorText = "Password or UserName is wrong"
+            shoppingViewModel.marsUiState = MarsUiState.Loading
+        }
+    }
+
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Welcome to Daniels Shopping app",Modifier.padding(20.dp))
@@ -40,7 +66,14 @@ fun LoginPage(navController: NavHostController) {
         Row(horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth())
         {
             Button(
-                onClick = { },
+                onClick = {
+                    if(username == "" || password == "")
+                    {
+                        errorText = "Please enter Password and UserName"
+                        return@Button
+                    }
+                    shoppingViewModel.getMarsPhotos(username,password)
+                },
                 modifier = Modifier
                     .padding(5.dp),
             ) {
@@ -55,7 +88,10 @@ fun LoginPage(navController: NavHostController) {
                 Text(text = "Sign up")
             }
         }
+        Text(text = errorText,modifier = Modifier.padding(5.dp),)
     }
+
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

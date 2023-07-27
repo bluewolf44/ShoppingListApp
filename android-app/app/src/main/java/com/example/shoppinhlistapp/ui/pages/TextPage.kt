@@ -21,12 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shoppinhlistapp.ui.theme.ShoppinhlistappTheme
+import androidx.navigation.NavHostController
 
 @Composable
-fun TextPage(modifier: Modifier = Modifier) {
+fun TextPage(navController: NavHostController) {
     var text by remember {
         mutableStateOf("")
     }
@@ -52,15 +51,6 @@ fun TextPage(modifier: Modifier = Modifier) {
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun TextPagePreview() {
-    ShoppinhlistappTheme {
-        TextPage()
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditField(n:String,value:String,onChange:(String) -> Unit)
@@ -78,7 +68,7 @@ fun EditField(n:String,value:String,onChange:(String) -> Unit)
     )
 }
 
-fun test(n:String)
+fun test(n: String)
 {
     Log.i("test",n)
 }
