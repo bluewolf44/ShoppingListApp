@@ -20,8 +20,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.shoppinhlistapp.network.Person
 import com.example.shoppinhlistapp.ui.Screen
+import com.example.shoppinhlistapp.ui.viewmodel.LoginInViewModel
+import com.example.shoppinhlistapp.ui.viewmodel.MarsUiState
+import com.example.shoppinhlistapp.ui.viewmodel.SignUpViewModel
 
 @Composable
 fun signUpPage(navController: NavHostController)
@@ -41,6 +46,25 @@ fun signUpPage(navController: NavHostController)
     var email by remember {
         mutableStateOf("")
     }
+    var errorText by remember {
+        mutableStateOf("")
+    }
+
+    val shoppingViewModel: SignUpViewModel = viewModel()
+
+    when (shoppingViewModel.marsUiState) {
+        is MarsUiState.Loading -> {}
+        is MarsUiState.Success -> {
+            navController.navigate(route = Screen.ListScreen.route)
+            shoppingViewModel.marsUiState = MarsUiState.Loading
+        }
+
+        is MarsUiState.Error -> {
+            errorText = "UserName is taken"
+            shoppingViewModel.marsUiState = MarsUiState.Loading
+        }
+    }
+
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Please sign up",Modifier.padding(20.dp))
@@ -52,7 +76,18 @@ fun signUpPage(navController: NavHostController)
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth())
         {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { if(firstname == "" ||lastname == "" ||email == "" || username == "" || password == "")
+                    {
+                        errorText = "Please enter fields"
+                        return@Button
+                    }
+                    shoppingViewModel.addPerson(Person(
+                        firstName = firstname,
+                        lastName = lastname,
+                        email = email,
+                        password = password,
+                        userName = username
+                    )) },
                 modifier = Modifier
                     .padding(5.dp),
             ) {
@@ -66,7 +101,7 @@ fun signUpPage(navController: NavHostController)
                 Text(text = "Cancel")
             }
         }
-        Text(text = "UserName alreay taken")
+        Text(text = errorText)
     }
 }
 

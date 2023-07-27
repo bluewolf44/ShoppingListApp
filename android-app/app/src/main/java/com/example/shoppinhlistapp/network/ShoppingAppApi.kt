@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Call
 import retrofit2.Retrofit
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -25,6 +26,9 @@ private val retrofit = Retrofit.Builder()
 interface ShoppingAppApiService {
     @GET("person/{username}/{password}")
     suspend fun getPerson(@Path("username") username: String,@Path("password") password: String): Person
+
+    @POST("person")
+    suspend fun addPerson(@Body person: Person)
 
 
     //@POST("person")

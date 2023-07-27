@@ -9,22 +9,26 @@ import androidx.lifecycle.viewModelScope
 import com.example.shoppinhlistapp.network.Person
 import com.example.shoppinhlistapp.network.ShoppingAppApi
 import kotlinx.coroutines.launch
-import java.io.IOException
+
+ sealed interface MarsUiState {
+    data class Success(val person: Person) : MarsUiState
+    object Error : MarsUiState
+    object Loading : MarsUiState
+}
 
 
-class LoginInViewModel: ViewModel() {
+class SignUpViewModel: ViewModel() {
     var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)
-    fun getPerson(username:String,password:String) {
+    fun addPerson(person:Person) {
 
         viewModelScope.launch {
-            marsUiState = try {
-                val person = ShoppingAppApi.retrofitService.getPerson(username,password)
 
+            marsUiState = try {
+                ShoppingAppApi.retrofitService.addPerson(person)
                 MarsUiState.Success(
                     person
                 )
-
-            } catch (e: Exception) {
+            }catch (e: Exception) {
                 MarsUiState.Error
             }
         }

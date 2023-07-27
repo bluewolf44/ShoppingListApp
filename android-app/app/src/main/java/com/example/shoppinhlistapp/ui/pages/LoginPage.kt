@@ -72,7 +72,7 @@ fun LoginPage(navController: NavHostController) {
                         errorText = "Please enter Password and UserName"
                         return@Button
                     }
-                    shoppingViewModel.getMarsPhotos(username,password)
+                    shoppingViewModel.getPerson(username,password)
                 },
                 modifier = Modifier
                     .padding(5.dp),
