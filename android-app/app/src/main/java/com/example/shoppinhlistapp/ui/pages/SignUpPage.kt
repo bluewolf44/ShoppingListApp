@@ -53,7 +53,7 @@ fun signUpPage(navController: NavHostController,viewModel: SharedViewModel)
     when (viewModel.SignupState) {
         is MarsUiState.Loading -> {}
         is MarsUiState.Success -> {
-            viewModel.setCurrentPerson((viewModel.LoginState as MarsUiState.Success).person)
+            viewModel.setCurrentPerson((viewModel.SignupState as MarsUiState.Success).person)
             viewModel.getLists(viewModel.person.userName,viewModel.person.password)
             navController.navigate(route = Screen.ListScreen.route)
             viewModel.SignupState = MarsUiState.Loading
