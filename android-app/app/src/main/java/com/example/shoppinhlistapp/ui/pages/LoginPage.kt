@@ -3,7 +3,6 @@ package com.example.shoppinhlistapp.ui.pages
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -25,11 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.shoppinhlistapp.ui.Screen
-import com.example.shoppinhlistapp.ui.viewmodel.LoginInViewModel
 import com.example.shoppinhlistapp.ui.viewmodel.MarsUiState
+import com.example.shoppinhlistapp.ui.viewmodel.SharedViewModel
 
 @Composable
-fun LoginPage(navController: NavHostController) {
+fun LoginPage(navController: NavHostController,viewModel: SharedViewModel) {
 
     var username by remember {
         mutableStateOf("")
@@ -43,18 +42,18 @@ fun LoginPage(navController: NavHostController) {
         mutableStateOf("")
     }
 
-    val shoppingViewModel: LoginInViewModel = viewModel()
-
-    when (shoppingViewModel.marsUiState) {
+    when (viewModel.LoginState) {
         is MarsUiState.Loading -> {}
         is MarsUiState.Success -> {
+            viewModel.setCurrentPerson((viewModel.LoginState as MarsUiState.Success).person)
+            viewModel.getLists(viewModel.person.userName,viewModel.person.password)
             navController.navigate(route = Screen.ListScreen.route)
-            shoppingViewModel.marsUiState = MarsUiState.Loading
+            viewModel.LoginState = MarsUiState.Loading
         }
 
         is MarsUiState.Error -> {
             errorText = "Password or UserName is wrong"
-            shoppingViewModel.marsUiState = MarsUiState.Loading
+            viewModel.LoginState = MarsUiState.Loading
         }
     }
 
@@ -72,7 +71,7 @@ fun LoginPage(navController: NavHostController) {
                         errorText = "Please enter Password and UserName"
                         return@Button
                     }
-                    shoppingViewModel.getPerson(username,password)
+                    viewModel.getPerson(username,password)
                 },
                 modifier = Modifier
                     .padding(5.dp),

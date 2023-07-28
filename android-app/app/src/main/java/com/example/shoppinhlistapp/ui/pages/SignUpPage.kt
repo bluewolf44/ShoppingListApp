@@ -24,12 +24,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.shoppinhlistapp.network.Person
 import com.example.shoppinhlistapp.ui.Screen
-import com.example.shoppinhlistapp.ui.viewmodel.LoginInViewModel
 import com.example.shoppinhlistapp.ui.viewmodel.MarsUiState
-import com.example.shoppinhlistapp.ui.viewmodel.SignUpViewModel
+import com.example.shoppinhlistapp.ui.viewmodel.SharedViewModel
 
 @Composable
-fun signUpPage(navController: NavHostController)
+fun signUpPage(navController: NavHostController,viewModel: SharedViewModel)
 {
     var username by remember {
         mutableStateOf("")
@@ -50,18 +49,19 @@ fun signUpPage(navController: NavHostController)
         mutableStateOf("")
     }
 
-    val shoppingViewModel: SignUpViewModel = viewModel()
 
-    when (shoppingViewModel.marsUiState) {
+    when (viewModel.SignupState) {
         is MarsUiState.Loading -> {}
         is MarsUiState.Success -> {
+            viewModel.setCurrentPerson((viewModel.LoginState as MarsUiState.Success).person)
+            viewModel.getLists(viewModel.person.userName,viewModel.person.password)
             navController.navigate(route = Screen.ListScreen.route)
-            shoppingViewModel.marsUiState = MarsUiState.Loading
+            viewModel.SignupState = MarsUiState.Loading
         }
 
         is MarsUiState.Error -> {
             errorText = "UserName is taken"
-            shoppingViewModel.marsUiState = MarsUiState.Loading
+            viewModel.SignupState = MarsUiState.Loading
         }
     }
 
@@ -81,7 +81,7 @@ fun signUpPage(navController: NavHostController)
                         errorText = "Please enter fields"
                         return@Button
                     }
-                    shoppingViewModel.addPerson(Person(
+                    viewModel.addPerson(Person(
                         firstName = firstname,
                         lastName = lastname,
                         email = email,

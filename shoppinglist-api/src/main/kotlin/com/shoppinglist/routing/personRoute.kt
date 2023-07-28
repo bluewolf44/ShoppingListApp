@@ -34,7 +34,7 @@ fun Route.PersonRouting()
             )
 
             val statement: PreparedStatement = dbConnection.prepareStatement(
-                "Select * from Person INNER JOIN Access on Person.UserName = Access.UserName where person.username=? and password =?").apply {
+                "Select * from Person where person.username=? and password =?").apply {
                 setString(1, username)
                 setString(2, password)
             }

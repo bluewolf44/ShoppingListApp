@@ -17,9 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.shoppinhlistapp.ui.viewmodel.SharedViewModel
 
 @Composable
-fun listPage(navController: NavHostController){
+fun listPage(navController: NavHostController,viewModel: SharedViewModel){
+
+
     Column(verticalArrangement = Arrangement.SpaceBetween) {
         Column {
             Text(text = "hello Daniel")
@@ -51,7 +54,7 @@ fun listPage(navController: NavHostController){
             .fillMaxWidth()
             .padding(10.dp))
         {
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { navController.popBackStack() }) {
                 Text(text = "log out")
             }
             Button(onClick = { /*TODO*/ }) {

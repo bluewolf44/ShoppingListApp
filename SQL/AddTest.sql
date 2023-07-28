@@ -32,3 +32,5 @@ where listid in (
 );
 
 select * from person;
+
+Select * from Person  where person.username='b' and password ='b';

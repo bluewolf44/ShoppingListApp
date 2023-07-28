@@ -23,9 +23,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.shoppinhlistapp.ui.viewmodel.SharedViewModel
 
 @Composable
-fun TextPage(navController: NavHostController) {
+fun TextPage(navController: NavHostController,viewModel: SharedViewModel) {
     var text by remember {
         mutableStateOf("")
     }
