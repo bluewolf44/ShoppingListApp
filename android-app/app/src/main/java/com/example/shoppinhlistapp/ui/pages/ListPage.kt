@@ -1,6 +1,7 @@
 package com.example.shoppinhlistapp.ui.pages
 
 import android.app.ActivityManager.TaskDescription
+import android.widget.ScrollView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,32 +33,37 @@ fun listPage(navController: NavHostController,viewModel: SharedViewModel){
 
 
     Column(verticalArrangement = Arrangement.SpaceBetween) {
-        Column {
-            Text(text = "hello ${viewModel.person.userName}")
+        LazyColumn() {
+            item{ Text(text = "hello ${viewModel.person.userName}") }
+
             when (viewModel.listsState) {
                 is ListsState.Loading -> {}
                 is ListsState.Success -> {
-                    for (list in (viewModel.listsState as ListsState.Success).lists) Listrow(
-                        list.listName,
-                        list.lastUpdated,
-                        list.listDescription,
-                        list.accessType,
-                        navController
-                    )
+                    for (list in (viewModel.listsState as ListsState.Success).lists) item {
+                        Listrow(
+                            list.listName,
+                            list.lastUpdated,
+                            list.listDescription,
+                            list.accessType,
+                            navController
+                        )
+                    }
                 }
+
                 is ListsState.Error -> {}
             }
-        }
-        Row( verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.SpaceBetween,modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp))
-        {
-            Button(onClick = { navController.popBackStack() }) {
-                Text(text = "log out")
-            }
-            Button(onClick = { navController.navigate(Screen.NewList.route) }) {
-                Text(text = "Add new")
-            }
+
+            item{Row( verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.SpaceBetween,modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp))
+            {
+                Button(onClick = { navController.popBackStack() }) {
+                    Text(text = "log out")
+                }
+                Button(onClick = { navController.navigate(Screen.NewList.route) }) {
+                    Text(text = "Add new")
+                }
+            }}
         }
     }
 }

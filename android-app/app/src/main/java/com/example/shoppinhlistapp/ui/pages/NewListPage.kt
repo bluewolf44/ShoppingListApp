@@ -22,6 +22,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.shoppinhlistapp.network.ListClass
+import com.example.shoppinhlistapp.network.ListCreate
+import com.example.shoppinhlistapp.network.Person
+import com.example.shoppinhlistapp.ui.Screen
+import com.example.shoppinhlistapp.ui.viewmodel.MarsUiState
 import com.example.shoppinhlistapp.ui.viewmodel.SharedViewModel
 
 @Composable
@@ -33,6 +38,23 @@ fun newListPage(navController: NavHostController,viewModel: SharedViewModel)
     var description by remember {
         mutableStateOf("")
     }
+    var errorText by remember {
+        mutableStateOf("")
+    }
+
+    when (viewModel.AddListState) {
+        is MarsUiState.Loading -> {}
+        is MarsUiState.Success -> {
+            viewModel.getLists(viewModel.person.userName, viewModel.person.password)
+            navController.popBackStack()
+            viewModel.AddListState = MarsUiState.Loading
+        }
+
+        is MarsUiState.Error -> {
+            errorText = "Something broke"
+        }
+    }
+
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Create new list",Modifier.padding(20.dp))
@@ -42,20 +64,33 @@ fun newListPage(navController: NavHostController,viewModel: SharedViewModel)
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth())
         {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { if(name == "" ||description == "")
+                    {
+                        errorText = "Please enter fields"
+                        return@Button
+                    }
+                    viewModel.listadd(
+                        ListCreate(
+                            listDescription = description,
+                            listName = name,
+                        ),
+                        viewModel.person.userName,
+                        viewModel.person.password,
+                    )
+                },
                 modifier = Modifier
                     .padding(5.dp),
             ) {
                 Text(text = "create new")
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.popBackStack() },
                 modifier = Modifier
                     .padding(5.dp),
             ) {
-                Text(text = "cancel")
+                Text(text = "Cancel")
             }
         }
-        Text(text = "name to long")
+        Text(text = errorText)
     }
 }

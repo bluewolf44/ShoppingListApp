@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shoppinhlistapp.network.ListClass
+import com.example.shoppinhlistapp.network.ListCreate
 import com.example.shoppinhlistapp.network.Person
 import com.example.shoppinhlistapp.network.ShoppingAppApi
 import kotlinx.coroutines.launch
@@ -31,6 +32,8 @@ class SharedViewModel : ViewModel()  {
     var LoginState: MarsUiState by mutableStateOf(MarsUiState.Loading)
 
     var SignupState: MarsUiState by mutableStateOf(MarsUiState.Loading)
+
+    var AddListState: MarsUiState by mutableStateOf(MarsUiState.Loading)
 
     var person by mutableStateOf<Person>(Person("","","","",""))
         private set
@@ -80,6 +83,20 @@ class SharedViewModel : ViewModel()  {
                 )
 
             } catch (e: Exception) {
+                MarsUiState.Error
+            }
+        }
+    }
+
+    fun listadd(list: ListCreate,username:String,password:String) {
+        viewModelScope.launch {
+
+            AddListState = try {
+                ShoppingAppApi.retrofitService.addPerson(list,username,password)
+                MarsUiState.Success(
+                    person
+                )
+            }catch (e: Exception) {
                 MarsUiState.Error
             }
         }

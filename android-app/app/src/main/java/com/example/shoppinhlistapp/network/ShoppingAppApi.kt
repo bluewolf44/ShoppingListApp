@@ -30,9 +30,11 @@ interface ShoppingAppApiService {
     @POST("person")
     suspend fun addPerson(@Body person: Person)
 
-
     @GET("List/{username}/{password}")
     suspend fun getList(@Path("username") username: String,@Path("password") password: String): List<ListClass>
+
+    @POST("List/{username}/{password}")
+    suspend fun addPerson(@Body list: ListCreate,@Path("username") username: String,@Path("password") password: String)
 }
 
 
