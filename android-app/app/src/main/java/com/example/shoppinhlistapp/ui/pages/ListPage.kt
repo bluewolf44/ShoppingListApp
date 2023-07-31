@@ -1,7 +1,5 @@
 package com.example.shoppinhlistapp.ui.pages
 
-import android.app.ActivityManager.TaskDescription
-import android.widget.ScrollView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,10 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.shoppinhlistapp.ui.Screen
 import com.example.shoppinhlistapp.ui.viewmodel.ListsState
-import com.example.shoppinhlistapp.ui.viewmodel.MarsUiState
 import com.example.shoppinhlistapp.ui.viewmodel.SharedViewModel
 
 @Composable
@@ -45,7 +39,9 @@ fun listPage(navController: NavHostController,viewModel: SharedViewModel){
                             list.lastUpdated,
                             list.listDescription,
                             list.accessType,
-                            navController
+                            list.listID,
+                            navController,
+                            viewModel
                         )
                     }
                 }
@@ -69,7 +65,7 @@ fun listPage(navController: NavHostController,viewModel: SharedViewModel){
 }
 
 @Composable
-fun Listrow(name:String,date:String,description: String,type:String,navController:NavHostController)
+fun Listrow(name:String,date:String,description: String,type:String,listId:Int,navController:NavHostController,viewModel: SharedViewModel)
 {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier
@@ -95,7 +91,10 @@ fun Listrow(name:String,date:String,description: String,type:String,navControlle
                     "edi" -> Text(text = "can edit", modifier = Modifier.padding(5.dp))
                 }
             }
-            Button(onClick = { navController.navigate(Screen.TextScreen.route) }, modifier = Modifier.padding(5.dp)) {
+            Button(onClick = {
+                viewModel.getText(viewModel.person.userName,viewModel.person.password,listId);
+                navController.navigate(Screen.TextScreen.route) }, modifier = Modifier.padding(5.dp))
+            {
                 Text(text = "->")
             }
         }

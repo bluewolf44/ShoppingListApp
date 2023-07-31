@@ -24,6 +24,11 @@ sealed interface MarsUiState {
     object Loading : MarsUiState
 }
 
+sealed interface TextsState {
+    data class Success(var text: String) : TextsState
+    object Error : TextsState
+    object Loading : TextsState
+}
 
 class SharedViewModel : ViewModel()  {
     var listsState: ListsState by mutableStateOf(ListsState.Loading)
@@ -34,6 +39,8 @@ class SharedViewModel : ViewModel()  {
     var SignupState: MarsUiState by mutableStateOf(MarsUiState.Loading)
 
     var AddListState: MarsUiState by mutableStateOf(MarsUiState.Loading)
+
+    var textState: TextsState by mutableStateOf(TextsState.Loading)
 
     var person by mutableStateOf<Person>(Person("","","","",""))
         private set
@@ -98,6 +105,20 @@ class SharedViewModel : ViewModel()  {
                 )
             }catch (e: Exception) {
                 MarsUiState.Error
+            }
+        }
+    }
+
+    fun getText(username:String, password:String, listId: Int) {
+        viewModelScope.launch {
+            textState = try {
+                var text = ShoppingAppApi.retrofitService.getText(username,password,listId)
+                TextsState.Success(
+                    text.text
+                )
+            }catch (e: Exception) {
+                Log.i("notwork",e.toString())
+                TextsState.Error
             }
         }
     }

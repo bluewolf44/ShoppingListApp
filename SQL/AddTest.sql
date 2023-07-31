@@ -31,6 +31,6 @@ where listid in (
     where person.username='Blue' and password ='Fire1234' and list.listid = 0
 );
 
-select * from person;
+select * from list;
 
 Select * from Person  where person.username='b' and password ='b';

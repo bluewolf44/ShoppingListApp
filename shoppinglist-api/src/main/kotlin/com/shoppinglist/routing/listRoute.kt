@@ -4,6 +4,7 @@ import com.shoppinglist.dao.listSize
 import com.shoppinglist.model.ListClass
 import com.shoppinglist.model.ListCreate
 import com.shoppinglist.model.Person
+import com.shoppinglist.model.TextClass
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -86,7 +87,7 @@ fun Route.ListRounting()
             val resultSet = statement.executeQuery()
             resultSet.next()
 
-            call.respondText(resultSet.getString("ListText"))
+            call.respond(TextClass(resultSet.getString("ListText")))
         }
         patch ("{username}/{password}/{listId}") {
             val username = call.parameters["username"] ?: return@patch call.respondText(

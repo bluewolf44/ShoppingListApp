@@ -33,6 +33,9 @@ interface ShoppingAppApiService {
     @GET("List/{username}/{password}")
     suspend fun getList(@Path("username") username: String,@Path("password") password: String): List<ListClass>
 
+    @GET("List/{username}/{password}/{listId}")
+    suspend fun getText(@Path("username") username: String,@Path("password") password: String,@Path("listId") listId : Int): TextClass
+
     @POST("List/{username}/{password}")
     suspend fun addPerson(@Body list: ListCreate,@Path("username") username: String,@Path("password") password: String)
 }

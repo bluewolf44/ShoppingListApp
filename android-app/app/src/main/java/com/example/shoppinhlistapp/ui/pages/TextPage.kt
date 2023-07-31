@@ -23,10 +23,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.shoppinhlistapp.ui.viewmodel.ListsState
 import com.example.shoppinhlistapp.ui.viewmodel.SharedViewModel
+import com.example.shoppinhlistapp.ui.viewmodel.TextsState
 
 @Composable
 fun TextPage(navController: NavHostController,viewModel: SharedViewModel) {
+
     var text by remember {
         mutableStateOf("")
     }
@@ -39,7 +42,7 @@ fun TextPage(navController: NavHostController,viewModel: SharedViewModel) {
             }
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.popBackStack() },
                     modifier = Modifier
                         .padding(5.dp),
                 ) {
@@ -47,7 +50,14 @@ fun TextPage(navController: NavHostController,viewModel: SharedViewModel) {
                 }
             }
         }
-
+        when (viewModel.textState) {
+            is TextsState.Loading -> {}
+            is TextsState.Success -> {
+                text = (viewModel.textState as TextsState.Success).text
+                viewModel.textState = TextsState.Loading
+            }
+            is TextsState.Error -> {}
+        }
         EditField("", text) { text = it;test(text) }
     }
 }
