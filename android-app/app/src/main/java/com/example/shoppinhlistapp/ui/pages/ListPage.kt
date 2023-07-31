@@ -25,33 +25,31 @@ import com.example.shoppinhlistapp.ui.viewmodel.SharedViewModel
 @Composable
 fun listPage(navController: NavHostController,viewModel: SharedViewModel){
 
+    LazyColumn() {
+        item{ Text(text = "hello ${viewModel.person.userName}") }
 
-    Column(verticalArrangement = Arrangement.SpaceBetween) {
-        LazyColumn() {
-            item{ Text(text = "hello ${viewModel.person.userName}") }
-
-            when (viewModel.listsState) {
-                is ListsState.Loading -> {}
-                is ListsState.Success -> {
-                    for (list in (viewModel.listsState as ListsState.Success).lists) item {
-                        Listrow(
-                            list.listName,
-                            list.lastUpdated,
-                            list.listDescription,
-                            list.accessType,
-                            list.listID,
-                            navController,
-                            viewModel
-                        )
-                    }
+        when (viewModel.listsState) {
+            is ListsState.Loading -> {}
+            is ListsState.Success -> {
+                for (list in (viewModel.listsState as ListsState.Success).lists) item {
+                    Listrow(
+                        list.listName,
+                        list.lastUpdated,
+                        list.listDescription,
+                        list.accessType,
+                        list.listID,
+                        navController,
+                        viewModel
+                    )
                 }
-
-                is ListsState.Error -> {}
             }
 
-            item{Row( verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.SpaceBetween,modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp))
+            is ListsState.Error -> {}
+        }
+
+        item{Row( verticalAlignment = Alignment.CenterVertically,horizontalArrangement = Arrangement.SpaceBetween,modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp))
             {
                 Button(onClick = { navController.popBackStack() }) {
                     Text(text = "log out")
@@ -59,9 +57,10 @@ fun listPage(navController: NavHostController,viewModel: SharedViewModel){
                 Button(onClick = { navController.navigate(Screen.NewList.route) }) {
                     Text(text = "Add new")
                 }
-            }}
+            }
         }
     }
+
 }
 
 @Composable
@@ -82,13 +81,13 @@ fun Listrow(name:String,date:String,description: String,type:String,listId:Int,n
         Row(horizontalArrangement = Arrangement.End)
         {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(onClick = { navController.navigate(Screen.Access.route) }, modifier = Modifier.padding(5.dp)) {
+                Button(onClick = {viewModel.getAccess(viewModel.person.userName,viewModel.person.password,listId,type=="own"); navController.navigate(Screen.Access.route);}, modifier = Modifier.padding(5.dp)) {
                     Text(text = "view people")
                 }
                 when(type) {
-                    "own" -> Text(text = "is owner", modifier = Modifier.padding(5.dp))
-                    "vie" -> Text(text = "can View", modifier = Modifier.padding(5.dp))
-                    "edi" -> Text(text = "can edit", modifier = Modifier.padding(5.dp))
+                    "own" -> Text(text = "Is owner", modifier = Modifier.padding(5.dp))
+                    "vie" -> Text(text = "Can view", modifier = Modifier.padding(5.dp))
+                    "edi" -> Text(text = "Can edit", modifier = Modifier.padding(5.dp))
                 }
             }
             Button(onClick = {

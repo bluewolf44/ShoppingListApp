@@ -1,5 +1,6 @@
 package com.shoppinglist.plugins
 
+import com.shoppinglist.routing.AccessRounting
 import com.shoppinglist.routing.ListRounting
 import com.shoppinglist.routing.PersonRouting
 import io.ktor.server.routing.*
@@ -19,5 +20,6 @@ fun Application.configureRouting() {
     routing {
         PersonRouting()
         ListRounting()
+        AccessRounting()
     }
 }

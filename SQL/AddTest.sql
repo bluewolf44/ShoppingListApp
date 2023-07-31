@@ -32,5 +32,42 @@ where listid in (
 );
 
 select * from list;
+select * from access;
 
-Select * from Person  where person.username='b' and password ='b';
+Select * from Person ;
+
+select * from access
+where listid in (Select list.listID from Person
+    INNER JOIN Access on Person.username = Access.username
+    INNER JOIN List on Access.ListID = List.ListID
+    where person.username='Blue' and password ='Fire1234' and list.listID=0
+) and username = 'DaveSmith';
+
+update Access set AccessType='edi'
+where listid in (Select list.listID from Person
+    INNER JOIN Access on Person.username = Access.username
+    INNER JOIN List on Access.ListID = List.ListID
+    where person.username='Blue' and password ='Fire1234' and list.listID=0
+) and username = 'DaveSmith';
+
+delete from access
+where listId in (
+    Select list.listId from Person
+    INNER JOIN Access on Person.username = Access.username
+    INNER JOIN List on Access.ListID = List.ListID
+    where person.username='Blue' and password ='Fire1234'and list.listid=2
+);
+
+
+delete from list
+where listId in (
+    Select list.listId from Person
+    INNER JOIN Access on Person.username = Access.username
+    INNER JOIN List on Access.ListID = List.ListID
+    where person.username='Blue' and password ='Fire1234' and list.listid=4
+);
+
+Select * from Person
+INNER JOIN Access on Person.username = Access.username
+INNER JOIN List on Access.ListID = List.ListID
+where person.username='Blue' and password ='Fire1234'

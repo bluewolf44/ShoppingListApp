@@ -1,0 +1,11 @@
+package com.shoppinglist.model
+
+import kotlinx.serialization.Serializable
+@Serializable
+data class AccessClass(
+    val username:String,
+    val type:String,
+    val listID:Int
+)
+
+

@@ -1,10 +1,7 @@
 package com.shoppinglist.routing
 
 import com.shoppinglist.dao.listSize
-import com.shoppinglist.model.ListClass
-import com.shoppinglist.model.ListCreate
-import com.shoppinglist.model.Person
-import com.shoppinglist.model.TextClass
+import com.shoppinglist.model.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -196,6 +193,53 @@ fun Route.ListRounting()
                 setInt(2, listId.toInt())
             }
             statement2.executeUpdate()
+
+            call.respondText("ListAccess stored correctly", status = HttpStatusCode.Created)
+        }
+
+        delete("{username}/{password}/{listId}")
+        {
+            val username = call.parameters["username"] ?: return@delete call.respondText(
+                "Missing username",
+                status = HttpStatusCode.BadRequest
+            )
+            val password = call.parameters["password"] ?: return@delete call.respondText(
+                "Missing password",
+                status = HttpStatusCode.BadRequest
+            )
+            val listId = call.parameters["listId"] ?: return@delete call.respondText(
+                "Missing listId",
+                status = HttpStatusCode.BadRequest
+            )
+            val statement: PreparedStatement = dbConnection.prepareStatement(
+                "delete from access " +
+                        "where listId in (" +
+                        "Select list.listId from Person " +
+                        "INNER JOIN Access on Person.username = Access.username " +
+                        "INNER JOIN List on Access.ListID = List.ListID " +
+                        "where person.username=? and password =? and list.listid=?" +
+                        ")"
+            ).apply {
+                setString(1, username)
+                setString(2, password)
+                setInt(3, listId.toInt())
+            }
+            statement.executeQuery()
+
+            val statement2: PreparedStatement = dbConnection.prepareStatement(
+                "delete from list " +
+                        "where listId in (" +
+                        "Select list.listId from Person " +
+                        "INNER JOIN Access on Person.username = Access.username " +
+                        "INNER JOIN List on Access.ListID = List.ListID " +
+                        "where person.username=? and password =? and list.listid=?" +
+                        ")"
+            ).apply {
+                setString(1, username)
+                setString(2, password)
+                setInt(3, listId.toInt())
+            }
+            statement2.executeQuery()
 
             call.respondText("ListAccess stored correctly", status = HttpStatusCode.Created)
         }

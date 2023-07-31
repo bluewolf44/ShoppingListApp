@@ -6,7 +6,9 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -36,8 +38,23 @@ interface ShoppingAppApiService {
     @GET("List/{username}/{password}/{listId}")
     suspend fun getText(@Path("username") username: String,@Path("password") password: String,@Path("listId") listId : Int): TextClass
 
+    @GET("Access/{username}/{password}/{listId}")
+    suspend fun getAccess(@Path("username") username: String,@Path("password") password: String,@Path("listId") listId : Int): List<AccessClass>
+
+    @DELETE("List/{username}/{password}/{listId}")
+    suspend fun listDelete(@Path("username") username: String,@Path("password") password: String,@Path("listId") listId : Int)
+
     @POST("List/{username}/{password}")
     suspend fun addPerson(@Body list: ListCreate,@Path("username") username: String,@Path("password") password: String)
+
+    @POST("Access/{username}/{password}/{otherUsername}/{listId}")
+    suspend fun addAccess(@Path("username") username: String,@Path("password") password: String,@Path("otherUsername") otherUsername : String,@Path("listId") listId : Int)
+
+    @PATCH("Access/{username}/{password}/{listId}")
+    suspend fun changeAccess(@Body access: AccessClass, @Path("username") username: String,@Path("password") password: String,@Path("listId") listId : Int)
+
+    @DELETE("Access/{username}/{password}/{otherUsername}/{listId}")
+    suspend fun deleteAccess(@Path("username") username: String,@Path("password") password: String,@Path("otherUsername") otherUsername : String,@Path("listId") listId : Int)
 }
 
 
