@@ -91,7 +91,7 @@ fun Listrow(name:String,date:String,description: String,type:String,listId:Int,n
                 }
             }
             Button(onClick = {
-                viewModel.getText(viewModel.person.userName,viewModel.person.password,listId);
+                viewModel.getText(viewModel.person.userName,viewModel.person.password,listId,name,date);
                 navController.navigate(Screen.TextScreen.route) }, modifier = Modifier.padding(5.dp))
             {
                 Text(text = "->")

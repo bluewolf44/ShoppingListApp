@@ -23,7 +23,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.shoppinhlistapp.ui.viewmodel.ListsState
+import com.example.shoppinhlistapp.network.TextClass
 import com.example.shoppinhlistapp.ui.viewmodel.SharedViewModel
 import com.example.shoppinhlistapp.ui.viewmodel.TextsState
 
@@ -34,11 +34,23 @@ fun TextPage(navController: NavHostController,viewModel: SharedViewModel) {
         mutableStateOf("")
     }
 
+    var listId by remember {
+        mutableStateOf(-1)
+    }
+
+    var name by remember {
+        mutableStateOf("Name")
+    }
+
+    var date by remember {
+        mutableStateOf("")
+    }
+
     Column {
         Row(horizontalArrangement = Arrangement.Center,verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             Column() {
-                Text(text = "Name", modifier = Modifier.padding(5.dp))
-                Text(text = "time updated:", modifier = Modifier.padding(2.dp))
+                Text(text = name, modifier = Modifier.padding(5.dp))
+                Text(text = "time updated:$date", modifier = Modifier.padding(2.dp))
             }
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                 Button(
@@ -53,12 +65,17 @@ fun TextPage(navController: NavHostController,viewModel: SharedViewModel) {
         when (viewModel.textState) {
             is TextsState.Loading -> {}
             is TextsState.Success -> {
-                text = (viewModel.textState as TextsState.Success).text
-                viewModel.textState = TextsState.Loading
+                if (listId == -1)
+                {
+                    text = (viewModel.textState as TextsState.Success).text
+                    listId = (viewModel.textState as TextsState.Success).listId
+                    name = (viewModel.textState as TextsState.Success).name
+                    date = (viewModel.textState as TextsState.Success).date.substring(0,10)
+                }
             }
             is TextsState.Error -> {}
         }
-        EditField("", text) { text = it;test(text) }
+        EditField("", text) { text = it;test(text,viewModel,listId,name,date)}
     }
 }
 
@@ -79,7 +96,14 @@ fun EditField(n:String,value:String,onChange:(String) -> Unit)
     )
 }
 
-fun test(n: String)
+fun test(n: String, viewModel: SharedViewModel,listId:Int,name:String,date:String)
 {
-    Log.i("test",n)
+    when (viewModel.textState) {
+        is TextsState.Loading -> {}
+        is TextsState.Error -> {}
+        is TextsState.Success -> {
+            viewModel.updateText(TextClass(n),viewModel.person.userName,viewModel.person.password,listId)
+            viewModel.getText(viewModel.person.userName,viewModel.person.password,listId,name,date)
+        }
+    }
 }

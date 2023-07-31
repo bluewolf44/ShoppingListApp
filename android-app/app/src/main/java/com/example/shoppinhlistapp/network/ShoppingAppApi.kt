@@ -55,6 +55,9 @@ interface ShoppingAppApiService {
 
     @DELETE("Access/{username}/{password}/{otherUsername}/{listId}")
     suspend fun deleteAccess(@Path("username") username: String,@Path("password") password: String,@Path("otherUsername") otherUsername : String,@Path("listId") listId : Int)
+
+    @PATCH("List/{username}/{password}/{listId}")
+    suspend fun updateText(@Body text:TextClass,@Path("username") username: String,@Path("password") password: String,@Path("listId") listId : Int)
 }
 
 

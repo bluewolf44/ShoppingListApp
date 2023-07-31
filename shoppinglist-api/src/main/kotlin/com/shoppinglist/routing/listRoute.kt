@@ -108,7 +108,7 @@ fun Route.ListRounting()
                         "INNER JOIN List on Access.ListID = List.ListID " +
                         "where person.username=? and password =? and list.listid = ?)"
             ).apply {
-                setString(1,call.receive<String>())
+                setString(1,call.receive<TextClass>().text)
                 setString(2, username)
                 setString(3, password)
                 setInt(4, listId.toInt())

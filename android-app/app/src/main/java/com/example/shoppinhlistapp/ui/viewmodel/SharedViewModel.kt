@@ -11,6 +11,7 @@ import com.example.shoppinhlistapp.network.ListClass
 import com.example.shoppinhlistapp.network.ListCreate
 import com.example.shoppinhlistapp.network.Person
 import com.example.shoppinhlistapp.network.ShoppingAppApi
+import com.example.shoppinhlistapp.network.TextClass
 import kotlinx.coroutines.launch
 
 sealed interface ListsState {
@@ -26,7 +27,7 @@ sealed interface MarsUiState {
 }
 
 sealed interface TextsState {
-    data class Success(var text: String) : TextsState
+    data class Success(var text: String, var listId:Int, var name:String, var date:String) : TextsState
     object Error : TextsState
     object Loading : TextsState
 }
@@ -117,15 +118,25 @@ class SharedViewModel : ViewModel()  {
         }
     }
 
-    fun getText(username:String, password:String, listId: Int) {
+    fun getText(username:String, password:String, listId: Int,name:String,date:String) {
         viewModelScope.launch {
             textState = try {
                 var text = ShoppingAppApi.retrofitService.getText(username,password,listId)
                 TextsState.Success(
-                    text.text
+                    text.text,listId,name,date
                 )
             }catch (e: Exception) {
                 TextsState.Error
+            }
+        }
+    }
+
+    fun updateText(text: TextClass, username:String, password:String, listId: Int) {
+        viewModelScope.launch {
+            try{
+                ShoppingAppApi.retrofitService.updateText(text,username,password,listId)
+            }catch (e: Exception) {
+
             }
         }
     }
