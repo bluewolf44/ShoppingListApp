@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: Blue
+      POSTGRES_PASSWORD: XCGT8Fdj
+      POSTGRES_DB: cheese
+    ports:
+      - "5433:5432"
+    expose:
+      - 5433
