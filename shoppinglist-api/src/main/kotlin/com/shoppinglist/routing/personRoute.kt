@@ -52,8 +52,9 @@ fun Route.PersonRouting()
                     firstName = resultSet.getString("FirstName"),
                     lastName = resultSet.getString("LastName"),
                     email = resultSet.getString("Email"),
-                    userName = resultSet.getString("UserName"),
+                    username = resultSet.getString("UserName"),
                     password = resultSet.getString("Password"),
+                    isVerified = false
                 )
                 call.respond(person)
             }
@@ -65,7 +66,7 @@ fun Route.PersonRouting()
                     "Values (?,?,?,?,?)").apply {
                 setString(1, person.firstName)
                 setString(2, person.lastName)
-                setString(3, person.userName)
+                setString(3, person.username)
                 setString(4, person.password)
                 setString(5, person.email)
             }

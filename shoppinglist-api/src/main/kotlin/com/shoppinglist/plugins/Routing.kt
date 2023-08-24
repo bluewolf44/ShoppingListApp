@@ -10,6 +10,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import java.sql.Connection
 import java.sql.DriverManager
+import com.shoppinglist.dao.dao
 
 fun Application.configureRouting() {
     install(StatusPages) {
@@ -18,8 +19,13 @@ fun Application.configureRouting() {
         }
     }
     routing {
-        PersonRouting()
-        ListRounting()
-        AccessRounting()
+        route("people") {
+            get {
+                call.respond(dao.allPeople())
+            }
+        }
+        //PersonRouting()
+        //ListRounting()
+        //AccessRounting()
     }
 }
