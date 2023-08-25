@@ -1,7 +1,6 @@
 package com.shoppinglist.plugins
 
 import com.shoppinglist.routing.AccessRounting
-import com.shoppinglist.routing.ListRounting
 import com.shoppinglist.routing.PersonRouting
 import io.ktor.server.routing.*
 import io.ktor.server.response.*
@@ -10,7 +9,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import java.sql.Connection
 import java.sql.DriverManager
-import com.shoppinglist.dao.dao
+import com.shoppinglist.dao.personDao
 
 fun Application.configureRouting() {
     install(StatusPages) {
@@ -21,7 +20,7 @@ fun Application.configureRouting() {
     routing {
         route("people") {
             get {
-                call.respond(dao.allPeople())
+                call.respond(personDao.allPeople())
             }
         }
         //PersonRouting()

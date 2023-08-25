@@ -39,7 +39,7 @@ class PersonImplDAO : PersonDAO {
     }
 }
 
-val dao: PersonDAO = PersonImplDAO().apply {
+val personDao: PersonDAO = PersonImplDAO().apply {
     runBlocking {
         if(allPeople().isEmpty()) {
             addPerson(Person("Dave","West","Blue","Password","@gmail",false))

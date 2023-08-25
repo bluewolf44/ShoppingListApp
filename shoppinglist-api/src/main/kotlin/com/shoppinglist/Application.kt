@@ -14,5 +14,5 @@ fun main(args: Array<String>): Unit =
 fun Application.module() {
     DatabaseFactory.init()
     configureSerialization()
-    configureRouting()
+    //configureRouting()
 }
