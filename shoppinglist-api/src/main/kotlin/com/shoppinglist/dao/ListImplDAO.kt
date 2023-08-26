@@ -62,6 +62,13 @@ class ListImplDAO : ListDAO {
             false
         }
     }
+
+    override suspend fun updateList(username: String, password: String, listId: Int, text: String): Boolean = dbQuery {
+        var list = getList(username,password,listId)
+        Lists.update({ Lists.listID eq (list?.listID ?: -1) }) {
+            it[Lists.text] = text;
+        } > 0
+    }
 }
 
 val listDao: ListDAO = ListImplDAO().apply {

@@ -8,4 +8,5 @@ interface ListDAO {
     suspend fun getList (username: String,password:String,listId:Int): ListClass?
     suspend fun addList(list:ListClass): ListClass?
     suspend fun deleteList(username: String,password:String,listId:Int) : Boolean
+    suspend fun updateList(username: String,password:String,listId:Int,text:String) : Boolean
 }
