@@ -1,6 +1,7 @@
 package com.shoppinglist.plugins
 
-import com.shoppinglist.routing.AccessRounting
+import com.shoppinglist.dao.accessDao
+import com.shoppinglist.dao.listDao
 import com.shoppinglist.routing.PersonRouting
 import io.ktor.server.routing.*
 import io.ktor.server.response.*
@@ -21,6 +22,16 @@ fun Application.configureRouting() {
         route("people") {
             get {
                 call.respond(personDao.allPeople())
+            }
+        }
+        route("list") {
+            get {
+                call.respond(listDao.allList())
+            }
+        }
+        route("access") {
+            get {
+                //call.respond(accessDao.get)
             }
         }
         //PersonRouting()

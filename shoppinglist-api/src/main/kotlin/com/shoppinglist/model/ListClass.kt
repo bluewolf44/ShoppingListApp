@@ -10,17 +10,17 @@ import java.time.Instant
 @Serializable
 data class ListClass(
     val listID:Int,
-    val accessType:String,
     val listName:String,
     val listDescription:String,
+    val text:String,
     val lastUpdated: LocalDateTime,
     val dateCreated:LocalDateTime)
 
 object Lists : Table() {
     val listID = integer("listId")
-    val accessType = varchar("firstName",255)
-    val listName = varchar("firstName",255)
-    val listDescription = varchar("firstName",255)
+    val listName = varchar("listName",255)
+    val listDescription = varchar("listDescription",255)
+    val text = text("text")
     val lastUpdated = timestamp("lastUpdated")
     val dateCreated = timestamp("dateCreated")
 
