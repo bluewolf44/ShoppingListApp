@@ -41,9 +41,5 @@ class PersonImplDAO : PersonDAO {
 
 val personDao: PersonDAO = PersonImplDAO().apply {
     runBlocking {
-        if(allPeople().isEmpty()) {
-            addPerson(Person("Dave","West","Blue","Password","@gmail",false))
-            println(getPerson("Blue","Password")?.firstName);
-        }
     }
 }

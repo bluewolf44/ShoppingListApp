@@ -10,6 +10,10 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 
 class AccessImpIDAO:AccessDAO {
+    override suspend fun getAccess(): List<AccessClass> = dbQuery{
+        Accesses.selectAll().map(::resultRowToAccess)
+    }
+
     private fun resultRowToAccess(row: ResultRow) = AccessClass(
         username = row[Accesses.username],
         listID = row[Accesses.listID],
@@ -20,12 +24,12 @@ class AccessImpIDAO:AccessDAO {
         accessType = row[TypeOfAccesses.accessType],
     )
 
-    override suspend fun createNewAccess(username: String, password: String, otherUsername: String, listId: Int): AccessClass? = dbQuery {
-            if( listDao.getList(username,password,listId)!= null) {
+    override suspend fun createNewAccess(username: String, password: String, otherUsername: String, listId: Int,type:String): AccessClass? = dbQuery {
+            if(listDao.getList(username,password,listId)!= null || type == "own") {
                 val insertStatement = Accesses.insert {
                     it[Accesses.username] = otherUsername
-                    it[Accesses.listID] = listID
-                    it[Accesses.accessType] = "vie"
+                    it[Accesses.listID] = listId
+                    it[Accesses.accessType] = type
                 }
                 insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToAccess)
             }
@@ -95,6 +99,4 @@ class AccessImpIDAO:AccessDAO {
     }
 }
 val accessDao: AccessDAO = AccessImpIDAO().apply {
-    runBlocking {
-    }
 }

@@ -11,6 +11,7 @@ import io.ktor.server.application.*
 import java.sql.Connection
 import java.sql.DriverManager
 import com.shoppinglist.dao.personDao
+import com.shoppinglist.model.Person
 
 fun Application.configureRouting() {
     install(StatusPages) {
@@ -19,6 +20,18 @@ fun Application.configureRouting() {
         }
     }
     routing {
+        route("setup")
+        {
+            post{
+                personDao.addPerson(Person("Dave","West","Blue","Password","@gmail",false))
+                accessDao.createNewAccess("Blue","Password","Blue",0,"own")
+                accessDao.createNewAccessType("own")
+                accessDao.createNewAccessType("vie")
+                accessDao.createNewAccessType("edi")
+                accessDao.createNewAccess("Blue","Password","Blue",0,"own")
+            }
+        }
+
         route("people") {
             get {
                 call.respond(personDao.allPeople())
@@ -31,7 +44,7 @@ fun Application.configureRouting() {
         }
         route("access") {
             get {
-                //call.respond(accessDao.get)
+                call.respond(accessDao.getAccess())
             }
         }
         //PersonRouting()

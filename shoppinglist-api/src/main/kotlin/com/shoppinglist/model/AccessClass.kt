@@ -10,7 +10,7 @@ data class AccessClass(
 )
 
 object Accesses: Table(){
-    val username = varchar("firstName",255).references(Persons.username)
+    val username = varchar("username",255).references(Persons.username)
     val listID = integer("listId").references(Lists.listID)
     val accessType = varchar("accessType",3).references(TypeOfAccesses.accessType)
 

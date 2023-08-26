@@ -31,12 +31,11 @@ class ListImplDAO : ListDAO {
     }
 
     override suspend fun getList(username: String, password: String, listId: Int): ListClass? {
-         val iterable = listDao.getListForPerson(username,password).listIterator()
+        val iterable = listDao.getListForPerson(username,password).iterator()
         while(iterable.hasNext())
         {
             val listClass = iterable.next()
-            if (listClass.listID == listId)
-            {
+            if (listClass.listID == listId) {
                 return listClass;
             }
         }
