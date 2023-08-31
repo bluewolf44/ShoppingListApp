@@ -25,19 +25,19 @@ class AccessImpIDAO:AccessDAO {
     )
 
     override suspend fun createNewAccess(username: String, password: String, otherUsername: String, listId: Int,type:String): AccessClass? = dbQuery {
-            if(listDao.getList(username,password,listId)!= null || type == "own") {
-                val insertStatement = Accesses.insert {
-                    it[Accesses.username] = otherUsername
-                    it[Accesses.listID] = listId
-                    it[Accesses.accessType] = type
-                }
-                insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToAccess)
+        if(listDao.getList(username,password,listId)!= null || type == "own") {
+            val insertStatement = Accesses.insert {
+                it[Accesses.username] = otherUsername
+                it[Accesses.listID] = listId
+                it[Accesses.accessType] = type
             }
-            else
-            {
-                null
-            }
+            insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToAccess)
         }
+        else
+        {
+            null
+        }
+    }
 
     override suspend fun removeAccess(username: String, password: String, otherUsername: String, listId: Int): Boolean = dbQuery{
         if (listDao.getList(username, password, listId) != null) {

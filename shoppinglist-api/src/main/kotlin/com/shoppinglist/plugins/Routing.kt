@@ -10,6 +10,7 @@ import io.ktor.server.application.*
 import com.shoppinglist.dao.personDao
 import com.shoppinglist.model.ListClass
 import com.shoppinglist.model.Person
+import com.shoppinglist.routing.accessRounting
 import com.shoppinglist.routing.listRounting
 import com.shoppinglist.routing.personRouting
 import kotlinx.datetime.*
@@ -52,6 +53,6 @@ fun Application.configureRouting() {
         }
         personRouting()
         listRounting()
-        //AccessRounting()
+        accessRounting()
     }
 }
