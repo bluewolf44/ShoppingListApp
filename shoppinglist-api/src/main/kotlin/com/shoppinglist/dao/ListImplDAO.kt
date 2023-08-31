@@ -56,6 +56,11 @@ class ListImplDAO : ListDAO {
 
     override suspend fun deleteList(username: String, password: String, listId: Int): Boolean = dbQuery {
         if (listDao.getList(username, password, listId) != null) {
+            for (access:AccessClass in accessDao.getAccesses(username,password,listId))
+            {
+                accessDao.removeAccess(username,password,access.username,listId)
+            }
+            ID--
             Lists.deleteWhere { Lists.listID eq listId } > 0
         } else
         {
@@ -63,18 +68,16 @@ class ListImplDAO : ListDAO {
         }
     }
 
-    override suspend fun updateList(username: String, password: String, listId: Int, text: String): Boolean = dbQuery {
+    override suspend fun updateList(username: String, password: String, listId: Int, text: String,lastUpdated : LocalDateTime): Boolean = dbQuery {
         var list = getList(username,password,listId)
         Lists.update({ Lists.listID eq (list?.listID ?: -1) }) {
             it[Lists.text] = text;
+            it[Lists.lastUpdated] = lastUpdated.toInstant(TimeZone.of("NZ"));
         } > 0
     }
 }
 
 val listDao: ListDAO = ListImplDAO().apply {
     runBlocking {
-        if(allList().isEmpty()) {
-            addList(ListClass(0,"own","Mine","Did stuff",LocalDateTime(2032,5,20,13,7,0,0),LocalDateTime(2032,5,20,13,7,0,0)))
-        }
     }
 }

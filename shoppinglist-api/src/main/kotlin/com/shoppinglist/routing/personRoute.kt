@@ -31,7 +31,7 @@ fun Route.personRouting()
             )
 
             val person = personDao.getPerson(username,password)
-            if (person== null)
+            if (person==null)
             {
                 call.respondText(
                     "No customer with username $username",
@@ -42,7 +42,7 @@ fun Route.personRouting()
             {
                 call.respond(person)
             }
-            
+
         }
         post {
             val person = call.receive<Person>()

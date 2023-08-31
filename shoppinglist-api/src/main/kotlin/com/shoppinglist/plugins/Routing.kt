@@ -8,8 +8,11 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import com.shoppinglist.dao.personDao
+import com.shoppinglist.model.ListClass
 import com.shoppinglist.model.Person
-import com.shoppinglist.routing.PersonRouting
+import com.shoppinglist.routing.listRounting
+import com.shoppinglist.routing.personRouting
+import kotlinx.datetime.*
 
 fun Application.configureRouting() {
     install(StatusPages) {
@@ -22,11 +25,13 @@ fun Application.configureRouting() {
         {
             post{
                 personDao.addPerson(Person("Dave","West","Blue","Password","@gmail",false))
-                accessDao.createNewAccess("Blue","Password","Blue",0,"own")
+                listDao.addList(ListClass(0,"Mine","Mine^2","Stuffff", Clock.System.now().toLocalDateTime(TimeZone.of("NZ")),Clock.System.now().toLocalDateTime(TimeZone.of("NZ"))))
+
                 accessDao.createNewAccessType("own")
                 accessDao.createNewAccessType("vie")
                 accessDao.createNewAccessType("edi")
                 accessDao.createNewAccess("Blue","Password","Blue",0,"own")
+                call.respondText("set right", status = HttpStatusCode.Created)
             }
         }
 
@@ -35,7 +40,7 @@ fun Application.configureRouting() {
                 call.respond(personDao.allPeople())
             }
         }
-        route("list") {
+        route("lists") {
             get {
                 call.respond(listDao.allList())
             }
@@ -46,7 +51,7 @@ fun Application.configureRouting() {
             }
         }
         personRouting()
-        //ListRounting()
+        listRounting()
         //AccessRounting()
     }
 }
