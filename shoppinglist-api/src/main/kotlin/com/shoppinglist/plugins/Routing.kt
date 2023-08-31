@@ -2,16 +2,14 @@ package com.shoppinglist.plugins
 
 import com.shoppinglist.dao.accessDao
 import com.shoppinglist.dao.listDao
-import com.shoppinglist.routing.PersonRouting
 import io.ktor.server.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.http.*
 import io.ktor.server.application.*
-import java.sql.Connection
-import java.sql.DriverManager
 import com.shoppinglist.dao.personDao
 import com.shoppinglist.model.Person
+import com.shoppinglist.routing.PersonRouting
 
 fun Application.configureRouting() {
     install(StatusPages) {
@@ -47,7 +45,7 @@ fun Application.configureRouting() {
                 call.respond(accessDao.getAccess())
             }
         }
-        //PersonRouting()
+        personRouting()
         //ListRounting()
         //AccessRounting()
     }

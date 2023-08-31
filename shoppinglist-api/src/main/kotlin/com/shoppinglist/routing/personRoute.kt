@@ -1,5 +1,6 @@
 package com.shoppinglist.routing
 
+import com.shoppinglist.dao.personDao
 import com.shoppinglist.dao.personSize
 import com.shoppinglist.model.Person
 import io.ktor.http.*
@@ -15,12 +16,8 @@ import java.sql.DriverManager
 import java.sql.PreparedStatement
 
 
-fun Route.PersonRouting()
+fun Route.personRouting()
 {
-    val dbConnection: Connection = DriverManager.getConnection(
-        "jdbc:postgresql://localhost:5432/postgres",
-        "postgres", "XCGT8Fdj"
-    )
 
     route("/person") {
         get("{username}/{password}"){
@@ -33,45 +30,26 @@ fun Route.PersonRouting()
                 status = HttpStatusCode.BadRequest
             )
 
-            val statement: PreparedStatement = dbConnection.prepareStatement(
-                "Select * from Person where person.username=? and password =?").apply {
-                setString(1, username)
-                setString(2, password)
-            }
-
-            val resultSet = statement.executeQuery()
-            if(!resultSet.next())
+            val person = personDao.getPerson(username,password)
+            if (person== null)
             {
                 call.respondText(
                     "No customer with username $username",
                     status = HttpStatusCode.NotFound
                 )
             }
-            else {
-                val person = Person(
-                    firstName = resultSet.getString("FirstName"),
-                    lastName = resultSet.getString("LastName"),
-                    email = resultSet.getString("Email"),
-                    username = resultSet.getString("UserName"),
-                    password = resultSet.getString("Password"),
-                    isVerified = false
-                )
+            else
+            {
                 call.respond(person)
             }
+            
         }
         post {
             val person = call.receive<Person>()
-            val statement: PreparedStatement = dbConnection.prepareStatement(
-                "INSERT INTO Person (FirstName,LastName,UserName,Password,Email)" +
-                    "Values (?,?,?,?,?)").apply {
-                setString(1, person.firstName)
-                setString(2, person.lastName)
-                setString(3, person.username)
-                setString(4, person.password)
-                setString(5, person.email)
+            if(personDao.addPerson(person) != null)
+            {
+                call.respondText("Person stored correctly", status = HttpStatusCode.Created)
             }
-            statement.executeUpdate()
-            call.respondText("Person stored correctly", status = HttpStatusCode.Created)
         }
     }
 }
